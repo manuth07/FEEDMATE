@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FEEDMATE - Smart Pet Feeder</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .login-bg {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        }
+        .btn-hover {
+            transition: all 0.3s ease;
+        }
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);  
+        }
+        .hidden {
+            display: none;
+        }
+        .paw-print {
+            position: relative;
+            display: inline-block;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        #error-message {
+            color: #ef4444;
+            margin-top: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-100">
+    <!-- Login Page -->
+    <div id="loginPage" class="min-h-screen login-bg flex items-center justify-center p-6">
+        <div class="card p-8 w-full max-w-md">
+            <div class="flex justify-center items-center mb-8">
+                <div class="logo-container">
+                    <i class="fas fa-dog text-4xl text-indigo-600 paw-print"></i>
+                    <h2 class="text-3xl font-bold text-indigo-600">FEEDMATE</h2>
+                </div>
+            </div>
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label class="block text-gray-700 mb-2">Email</label>
+                    <input type="email" id="email" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:border-indigo-500" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Password</label>
+                    <input type="password" id="password" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:border-indigo-500" required>
+                </div>
+                <div id="error-message"></div>
+                <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded-lg btn-hover">
+                    <i class="fas fa-paw mr-2"></i>Login
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Home Page -->
+    <div id="homePage" class="hidden">
+        <!-- Navigation -->
+        <nav class="bg-white shadow-lg">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex-shrink-0 logo-container">
+                        <i class="fas fa-dog text-2xl text-indigo-600"></i>
+                        <span class="text-2xl font-bold text-indigo-600">FEEDMATE</span>
+                    </div>
+                    <button id="logoutBtn" class="bg-red-500 text-white px-4 py-2 rounded-lg btn-hover">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="max-w-7xl mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Feeding Schedule Card -->
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-clock text-indigo-600 mr-2"></i>Feeding Schedule
+                    </h3>
+                    <div class="space-y-4">
+                        <button class="w-full bg-green-500 text-white py-2 rounded-lg btn-hover">
+                            <i class="fas fa-plus mr-2"></i>Set Schedule
+                        </button>
+                        <button class="w-full bg-blue-500 text-white py-2 rounded-lg btn-hover">
+                            <i class="fas fa-calendar-alt mr-2"></i>View Schedule
+                        </button>
+                    </div>
+                </div>
+
+                <div id="scheduleSection" class="card p-6">
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-clock text-indigo-600 mr-2"></i>Set Feeding Schedule
+                    </h3>
+                    <!-- Real-Time Clock and Date -->
+                        <div>
+                            <label class="block mb-2">Current Time</label>
+                            <div id="clock" class="text-lg font-medium mb-4"></div>
+                        </div>
+                        <div>
+                            <label class="block mb-2">Today's Date</label>
+                            <div id="calendar" class="text-lg font-medium mb-4"></div>
+                        </div>
+                        <!-- Feeding Schedule Input Fields -->
+                    <form id="dataForm">
+                        <div>
+                            <label class="block mb-2">Date</label>
+                            <input type="date" id="scheduleDate" class="w-full px-4 py-2 rounded-lg border focus:outline-none mb-4" required>
+                        </div>
+                        <div>
+                            <label class="block mb-2">Time</label>
+                            <input type="time" id="scheduleTime" class="w-full px-4 py-2 rounded-lg border focus:outline-none mb-4" required>
+                        </div>
+                        <div>
+                            <label class="block mb-2">Portion Size</label>
+                            <select id="portionSize1" class="w-full px-4 py-2 rounded-lg border focus:outline-none mb-4">
+                                <option value="Small">Small</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Large">Large</option>
+                            </select>
+                        </div>
+                        <button id="addScheduleBtn" type="submit" class="w-full bg-green-500 text-white py-2 rounded-lg btn-hover">
+                            Add Schedule
+                        </button>
+                    </form>
+                </div>
+
+
+                <div id="feedingHistorySection" class="card p-6">
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-history text-indigo-600 mr-2"></i>Feeding History
+                    </h3>
+                    <ul id="feedingHistory" class="list-disc pl-5"></ul>
+                </div>
+
+                
+                
+
+                <!-- Food Level Card -->
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-bowl-food text-indigo-600 mr-2"></i>Food Level
+                    </h3>
+                    <div class="relative pt-1">
+                        <div class="overflow-hidden h-6 text-xs flex rounded bg-gray-200">
+                            <div id = "progressBar" class="w-3/4 shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-green-500">
+                                100%
+                            </div>
+                        </div>
+                    </div>
+                    <button class="w-full bg-yellow-500 text-white py-2 rounded-lg mt-4 btn-hover">
+                        <i class="fas fa-bell mr-2"></i>Refill Alert
+                    </button>
+                </div>
+
+                <!-- Manual Feed Card -->
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-hand-holding-heart text-indigo-600 mr-2"></i>Manual Feed
+                    </h3>
+                    <button id="feedbtn" class="w-full bg-purple-500 text-white py-2 rounded-lg btn-hover">
+                        <i class="fas fa-bone mr-2"></i>Feed Now
+                    </button>
+                    <div class="mt-4">
+                        <label class="block text-gray-700 mb-2">
+                            <i class="fas fa-drumstick-bite mr-2"></i>Portion Size
+                        </label>
+                        <select id = "portionSize" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:border-purple-500">
+                            <option>Small</option>
+                            <option>Medium</option>
+                            <option>Large</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } 
+        from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJDkelKLZ6HcNirigD9rPHpFnWNxcpcb8",
+            authDomain: "website-hosting-a5a67.firebaseapp.com",
+            databaseURL: "https://website-hosting-a5a67-default-rtdb.firebaseio.com",
+            projectId: "website-hosting-a5a67",
+            storageBucket: "website-hosting-a5a67.firebasestorage.app",
+            messagingSenderId: "195781792700",
+            appId: "1:195781792700:web:0ef43f97973be60b3011b9",
+            measurementId: "G-2TXFM6X6TF"
+        };
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth(app);
+
+        // Login form handling
+        const loginForm = document.getElementById('loginForm');
+        const errorMessage = document.getElementById('error-message');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                errorMessage.textContent = '';
+                document.getElementById('loginPage').classList.add('hidden');
+                document.getElementById('homePage').classList.remove('hidden');
+            } catch (error) {
+                errorMessage.textContent = error.message;
+            }
+        });
+
+        // Logout handling
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                document.getElementById('loginPage').classList.remove('hidden');
+                document.getElementById('homePage').classList.add('hidden');
+                loginForm.reset();
+            } catch (error) {
+                console.error("Error signing out:", error);
+            }
+        });
+
+        // Auth state observer
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('loginPage').classList.add('hidden');
+                document.getElementById('homePage').classList.remove('hidden');
+            } else {
+                document.getElementById('loginPage').classList.remove('hidden');
+                document.getElementById('homePage').classList.add('hidden');
+            }
+        });
+    </script>
+
+    <script type="module" src="script.js"></script>
+
+</body>
+</html>
